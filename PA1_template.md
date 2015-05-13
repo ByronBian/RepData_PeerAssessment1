@@ -218,7 +218,13 @@ head(Act.New)
 ```r
 library(ggplot2)
 Act.New<-aggregate(steps~interval+wkday,data=Act.New,mean)
-qplot(interval,steps,data=Act.New,geom="line",facets=wkday~.,xlab="Interval",ylab="Number of Steps",fill=wkday)
+qplot(interval,steps,
+      data=Act.New,
+      geom="line",
+      facets=wkday~.,
+      xlab="Interval",
+      ylab="Number of Steps",
+      fill=wkday)
 ```
 
 ![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png) 

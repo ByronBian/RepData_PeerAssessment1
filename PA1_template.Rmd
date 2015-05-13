@@ -136,7 +136,13 @@ head(Act.New)
 ```{r,echo=TRUE}
 library(ggplot2)
 Act.New<-aggregate(steps~interval+wkday,data=Act.New,mean)
-qplot(interval,steps,data=Act.New,geom="line",facets=wkday~.,xlab="Interval",ylab="Number of Steps",fill=wkday)
+qplot(interval,steps,
+      data=Act.New,
+      geom="line",
+      facets=wkday~.,
+      xlab="Interval",
+      ylab="Number of Steps",
+      fill=wkday)
 ```
 
 Conclusion: Distributions of activity patterns between weekday and weekend have a slight difference, average step numbers during weekday are more higher than are those of weekend
