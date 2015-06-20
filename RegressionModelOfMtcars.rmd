@@ -1,0 +1,73 @@
+---
+output: word_document
+---
+####Regression Model Analysis on mtcars
+######Author: Byron.Bian   
+######Date: Date: June 20, 2015
+
+Overview: 
+In this report, I will explore the relationships of multi-variates within the dataset of mtcars
+by virtue of technique of regression modeling and then answer two questions in which magzine of Motor Trend is particularly interested. 
+***
+
+#####Phase I: Construct Multi-variates Linear Regression Model
+In order to fit a parsimonious linear model, firstly I need to explore the diagnostic information
+of a full-variates model(Regress outcome-MPG to all predictor variables)
+```{r,echo=TRUE}
+fit.lm<-lm(mpg~.,data=mtcars)
+lm.coef<-summary(fit.lm)$coef
+lm.coef[,4]
+```
+We can see that all P-Values are greater than .05, none of variables are significant, so this model is not ideal. And I can remove those redudant variates by using R function called Step.
+```{r,echo=TRUE,results='hide'}
+fit.lm<-step(fit.lm,direction="backward")
+```
+Here, step function chose the most parsimonious model in terms of minimum AIC value (61.31), and we can check the regression statistics
+```{r,echo=TRUE}
+summary(fit.lm)$coef
+```
+Now, we can see all three predictor variates are significant and R-square is ideal. Furthermore, variate of [am] is of category, so I need to change into factor and re-fit the model
+```{r,echo=TRUE}
+mycars<-mtcars[,c(1,6,7,9)]
+mycars$am<-as.factor(mycars$am)
+fit.lm<-lm(mpg~.,data=mycars)
+summary(fit.lm)
+```
+Now, the linear muti-variates regression model can be expressed like as below
+
+>mpg=9.6178 - 3.9165wt + 1.2259qsec + 2.9358(am="manual")
+
+#####Phase II: Interpretation
+According to the model I constructed, the two questions magzine of Motor Trend is interested in can be answered.
+
+*Is an automatic or manual transmission better for MPG?   
+Because the coefficient of am1 is 2.9358>0, and mpg means Miles/(US) gallon (Miles per gallon could drive). Then we know that Manual Transmission is better for MPG
+
+*Quantify the MPG difference between automatic and manual transmissions   
+Given other variables are keeping un-changed, the Miles/gallon of manual transmission are about 2.9358 more than automatic transmission.
+
+By the way, qsec has also positive coefficient. So given other variates are constant, each increase of qsec will lead to 1.2559 accruement of mpg. As for wt, under qsec and am are unchanged,each increase of 1t will lead to 3.9165 decrease of mpg.
+
+
+#####Appendix
+Figures of Regression Model Diagnostics
+```{r,echo=TRUE}
+par(oma=c(0,0,0,0),mai=c(1,1,.5,.5),mfrow=c(2,2));
+plot(fit.lm,which=1)
+plot(fit.lm,which=2)
+plot(fit.lm,which=3)
+plot(fit.lm,which=4)
+
+#normality of residuals by shapiro test
+fit.res<-residuals(fit.lm)
+shapiro.test(fit.res)
+```
+
+1 From fitted-value vs residuals, phenomenon of heteroscedasticity isn't obvious   
+2 From Normal Q-Q plot & shapiro test, we can check the normality of residuals   
+3 From standardized residuals & cook-distance plot, Chrysler Imperial may be strong influential point.
+
+
+
+
+
